@@ -3,13 +3,16 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        Parser parser = new Parser("D:\\self-study\\courses\\nand-to-tetris\\nand-to-tetris-repo\\assignment-6\\src\\PongL.asm");
+        Parser parser = new Parser("D:\\self-study\\courses\\nand-to-tetris\\nand-to-tetris-repo\\assignment-6\\src\\files\\Add.asm");
 
         try {
-            PrintWriter writer = new PrintWriter("PongL.hack");
+            PrintWriter writer = new PrintWriter("Add.hack");
 
-            ACommand aCommandTest = new ACommand("@10");
-            CCommand cCommandTest = new CCommand("D;JGT");
+            LabelTable labelTable = new LabelTable();
+            labelTable.fillTable("D:\\self-study\\courses\\nand-to-tetris\\nand-to-tetris-repo\\assignment-6\\src\\files\\Add.asm");
+
+            ACommand aCommandTest = new ACommand("@0");
+            CCommand cCommandTest = new CCommand("M=D");
 
             System.out.println("A test command: " + aCommandTest.translate());
             System.out.println("C test command: " + cCommandTest.translate());
@@ -31,7 +34,13 @@ public class Main {
                     binaryToWrite = cCommand.translate();
                     //System.out.println(cCommand.translate());
                 }
-//                System.out.println(binaryToWrite);
+
+                if (parser.command instanceof Label) {
+                    Label label = (Label) parser.command;
+                    binaryToWrite = label.translate();
+                }
+
+//                System.out.println(LabelTable.labelsMap);
 
                 if (binaryToWrite != null) {
                     writer.println(binaryToWrite);
